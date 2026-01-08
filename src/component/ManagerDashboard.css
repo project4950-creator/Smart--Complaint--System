@@ -1,0 +1,113 @@
+/* ===== DASHBOARD CONTAINER ===== */
+.manager-dashboard {
+  padding: 30px;
+  font-family: "Segoe UI", Arial, sans-serif;
+  background: #f9fafb;
+  min-height: 100vh;
+}
+
+/* ===== TITLE ===== */
+.manager-dashboard h2 {
+  font-size: 28px;
+  font-weight: bold;
+  margin-bottom: 25px;
+  background: linear-gradient(90deg, #3b82f6, #22c55e);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-align: center;
+}
+
+/* ===== INSTRUCTIONS CARD ===== */
+.instructions-card {
+  border: 1px solid #22c55e;
+  padding: 20px;
+  border-radius: 12px;
+  background: #f0fdf4;
+  margin-bottom: 25px;
+  box-shadow: 0 8px 20px rgba(34, 197, 94, 0.15);
+}
+
+.instructions-card h4 {
+  margin-bottom: 12px;
+  color: #065f46;
+}
+
+/* ===== TABLE ===== */
+.dashboard-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+}
+
+.dashboard-table th,
+.dashboard-table td {
+  padding: 12px 15px;
+  text-align: center;
+  font-size: 14px;
+  color: #111827;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.dashboard-table th {
+  background: #eff6ff;
+  font-weight: 600;
+  color: #1e40af;
+}
+
+.dashboard-table tr:hover {
+  background: #f0f9ff;
+  transition: 0.3s;
+}
+
+.dashboard-table img {
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+/* ===== BUTTON ===== */
+.complete-btn {
+  background: linear-gradient(90deg, #3b82f6, #22c55e);
+  color: white;
+  padding: 12px 25px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  margin-top: 20px;
+}
+
+.complete-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(34, 197, 94, 0.25);
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+  .dashboard-table th, .dashboard-table td {
+    font-size: 12px;
+    padding: 8px 10px;
+  }
+
+  .complete-btn {
+    width: 100%;
+    padding: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .manager-dashboard h2 {
+    font-size: 22px;
+  }
+
+  .instructions-card {
+    padding: 15px;
+  }
+
+  .dashboard-table img {
+    width: 50px !important;
+  }
+}

@@ -1,0 +1,207 @@
+/* ===========================
+   CITIZEN DASHBOARD
+=========================== */
+
+.dashboard-container {
+  width: 100%;
+  padding: 2rem;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+}
+
+.dashboard-title {
+  text-align: center;
+  font-size: 2.2rem;
+  font-weight: 700;
+  margin-bottom: 2rem;
+  color: #1f2937;
+}
+
+/* ===========================
+   DROPDOWN
+=========================== */
+
+.complaint-select {
+  width: 100%;
+  max-width: 420px;
+  margin: 0 auto 2.5rem;
+  display: block;
+  padding: 0.9rem 1rem;
+  font-size: 1rem;
+  border-radius: 10px;
+  border: 2px solid #d1d5db;
+  background: #fff;
+}
+
+/* ===========================
+   PROGRESS BAR
+=========================== */
+
+.progress-card {
+  background: #fff;
+  padding: 2.2rem;
+  border-radius: 18px;
+  box-shadow: 0 20px 40px rgba(0,0,0,.08);
+  margin-bottom: 3rem;
+}
+
+.progress-row {
+  display: flex;
+  align-items: center;
+}
+
+/* NODE */
+.progress-node {
+  display: flex;
+  align-items: center;
+  flex: 1;
+}
+
+/* 🔥 FIXED STEP HEIGHT */
+.progress-step {
+  height: 90px;
+  min-width: 70px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  z-index: 2;
+}
+
+/* ICON */
+.icon-circle {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #e5e7eb;
+  color: #9ca3af;
+}
+
+.icon-circle.active {
+  color: #fff;
+}
+
+.icon-circle.current {
+  box-shadow: 0 0 0 4px rgba(99,102,241,.25);
+}
+
+/* COLORS */
+.icon-circle.green.active { background: #22c55e; }
+.icon-circle.blue.active { background: #3b82f6; }
+.icon-circle.purple.active { background: #a855f7; }
+.icon-circle.pink.active { background: #ec4899; }
+.icon-circle.teal.active { background: #14b8a6; }
+
+/* 🔥 FIXED TEXT HEIGHT */
+.step-text {
+  height: 26px;
+  font-size: 0.8rem;
+  line-height: 1.1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: #6b7280;
+}
+
+.step-text.active {
+  color: #111827;
+  font-weight: 600;
+}
+
+/* LINE */
+.progress-line {
+  flex: 1;
+  height: 4px;
+  margin: 0 8px;
+  position: relative;
+}
+
+.line-bg,
+.line-fill {
+  position: absolute;
+  inset: 0;
+  height: 4px;
+  border-radius: 2px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.line-bg { background: #e5e7eb; }
+.line-fill { width: 0%; }
+
+.line-fill.green { background: #22c55e; }
+.line-fill.blue { background: #3b82f6; }
+.line-fill.purple { background: #a855f7; }
+.line-fill.pink { background: #ec4899; }
+.line-fill.teal { background: #14b8a6; }
+
+/* ===========================
+   DETAILS CARD
+=========================== */
+
+.details-wrapper {
+  display: flex;
+  justify-content: center;
+}
+
+.details-card {
+  max-width: 600px;
+  width: 100%;
+  background: #fff;
+  padding: 2rem;
+  border-radius: 18px;
+  box-shadow: 0 20px 40px rgba(0,0,0,.08);
+}
+
+/* ===========================
+   MOBILE (ONE CLEAN RULE)
+=========================== */
+
+@media (max-width: 480px) {
+
+  .dashboard-container {
+    padding: 1rem;
+  }
+
+  .dashboard-title {
+    font-size: 1.4rem;
+  }
+
+  .progress-card {
+    padding: 1.3rem;
+  }
+
+  .progress-step {
+    height: 70px;
+    min-width: 60px;
+  }
+
+  .icon-circle {
+    width: 32px;
+    height: 32px;
+  }
+
+  .icon-circle svg {
+    width: 14px;
+    height: 14px;
+  }
+
+  .step-text {
+    height: 22px;
+    font-size: 0.65rem;
+  }
+
+  .progress-line {
+    height: 3px;
+    margin: 0 4px;
+  }
+
+  .line-bg,
+  .line-fill {
+    height: 3px;
+  }
+}

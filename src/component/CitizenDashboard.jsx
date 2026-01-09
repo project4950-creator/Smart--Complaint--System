@@ -180,7 +180,7 @@ const CitizenDashboard = () => {
                     padding: "10px 16px",
                     borderRadius: "8px",
                     background: "linear-gradient(135deg, rgb(124, 58, 237), rgb(168, 85, 247), rgb(192, 132, 252));",
-                    color: "#fff",
+                    color: "#212529",
                     border: "none",
                     cursor: "pointer",
                     fontWeight: "600",

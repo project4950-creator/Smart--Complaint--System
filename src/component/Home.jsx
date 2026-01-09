@@ -61,7 +61,7 @@ const Home = () => {
           className="btn-cus"
           onClick={() => navigate("/karmchari-login")}
         >
-          Karmchari Login
+          Safaidoot Login
         </button>
       </div>
 

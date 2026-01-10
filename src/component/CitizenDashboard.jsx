@@ -21,18 +21,18 @@ const CitizenDashboard = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
+  // ✅ Logout function needs to be in component scope
+  const handleLogout = () => {
+    localStorage.clear();
+    navigate("/citizen-login");
+  };
+
   useEffect(() => {
     if (!citizenId) {
       setLoading(false);
       return;
     }
 
-    const handleLogout = () => {
-      localStorage.clear();
-      navigate("/citizen-login");
-    };
-
-    
     const fetchComplaints = async () => {
       try {
         const res = await fetch(
@@ -185,7 +185,8 @@ const CitizenDashboard = () => {
                     marginBottom: "20px",
                     padding: "10px 16px",
                     borderRadius: "8px",
-                    background: "linear-gradient(135deg, rgb(124, 58, 237), rgb(168, 85, 247), rgb(192, 132, 252));",
+                    background:
+                      "linear-gradient(135deg, rgb(124, 58, 237), rgb(168, 85, 247), rgb(192, 132, 252))",
                     color: "#212529",
                     border: "none",
                     cursor: "pointer",
@@ -196,12 +197,15 @@ const CitizenDashboard = () => {
                   ➕ Submit New Complaint
                 </button>
               </div>
-            <div>
-             <button className="btn btn-danger logout-btn" onClick={handleLogout}>
-        Logout
-      </button>
-            
-            </div>
+
+              <div>
+                <button
+                  className="btn btn-danger logout-btn"
+                  onClick={handleLogout}
+                >
+                  Logout
+                </button>
+              </div>
             </>
           )}
         </>

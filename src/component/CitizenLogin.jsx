@@ -7,9 +7,21 @@ const CitizenLogin = () => {
 
   // ✅ Auto-redirect if already logged in
   useEffect(() => {
-    const userId = localStorage.getItem("user_id");
-    const role = localStorage.getItem("role");
-    const hasSubmitted = localStorage.getItem("has_submitted_complaint");
+  const userId = localStorage.getItem("user_id");
+  const role = localStorage.getItem("role");
+  const isLoggedIn = localStorage.getItem("is_logged_in");
+  const hasSubmitted = localStorage.getItem("has_submitted_complaint");
+
+  if (isLoggedIn === "true" && userId && role === "CITIZEN") {
+    navigate(
+      hasSubmitted === "true"
+        ? "/citizen-dashboard"
+        : "/submit-complaint",
+      { replace: true }
+    );
+  }
+}, [navigate]);
+
 
     if (userId && role === "CITIZEN") {
       navigate(

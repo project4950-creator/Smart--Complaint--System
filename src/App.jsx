@@ -13,6 +13,8 @@ import ContractorDashboard from "./component/ContractorDashboard";
 import KarmchariDashboard from "./component/KarmchariDashboard";
 import ContractorValidationDashboard from "./component/ContractorValidationDashboard";
 import Footer from "./component/Footer";
+import AdminTable from "./component/AdminComplaintTable";
+import AdminComplaintTable from "./component/AdminComplaintTable";
 
 
 function App() {
@@ -28,6 +30,8 @@ function App() {
   <Route path="/signup" element={<SignUp />} />
   <Route path="/submit-complaint" element={<SubmitComplaint />} />
   <Route path="/forgot" element={<ForgotPassword />} />
+  <Route path="/admin-table" element={<AdminComplaintTable />} />
+  <Route path="/admin-table" element={<AdminTable />} />
 
   {/* ✅ DASHBOARD */}
         <Route path="/citizen-dashboard" element={<CitizenDashboard />} />

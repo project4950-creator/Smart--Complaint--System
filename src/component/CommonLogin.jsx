@@ -15,59 +15,53 @@ const CommonLogin = ({ role = "Citizen", signupPath, forgotPath }) => {
   const [loading, setLoading] = useState(false);
 
   const handleLogin = async () => {
-    if (!form.username || !form.password || !form.phone) {
-      alert("All fields are required");
+  if (!form.username || !form.password || !form.phone) {
+    alert("All fields are required");
+    return;
+  }
+
+  try {
+    setLoading(true);
+
+    const BASE_URL = import.meta.env.VITE_API_URL;
+
+    const res = await fetch(`${BASE_URL}/api/login/`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(form),
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      alert(data.message || "Login failed");
       return;
     }
 
-    try {
-      setLoading(true);
+    // Save session data
+    localStorage.setItem("user_id", data.user_id);
+    localStorage.setItem("role", data.role);
+    localStorage.setItem("is_logged_in", "true");
 
-      const BASE_URL = import.meta.env.VITE_API_URL; // 👉 use env base URL
+    // reset complaint flag on every login
+    localStorage.setItem("has_submitted_complaint", "false");
 
-      const res = await fetch(`${BASE_URL}/api/login/`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
-      });
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        alert(data.message || "Login failed");
-        return;
-      }
-
-      // Save session data
-      localStorage.setItem("user_id", data.user_id);
-      localStorage.setItem("role", data.role);
-      localStorage.setItem("is_logged_in", "true");
-      
-      // reset on every login
-      localStorage.setItem("has_submitted_complaint", "false");
-      
-      if (data.role === "CITIZEN") {
-        navigate("/submit-complaint");
-        return;
-      }
-
-
-        if (!hasSubmitted) {
-          navigate("/submit-complaint"); // first time
-        } else {
-          navigate("/citizen-dashboard"); // revisit
-        }
-        return;
-      }
-
-      // Other roles
-      navigate(data.redirect);
-    } catch (err) {
-      alert("Server error. Please try again.");
-    } finally {
-      setLoading(false);
+    // CITIZEN FIRST LOGIN
+    if (data.role === "CITIZEN") {
+      navigate("/submit-complaint"); // first time
+      return;
     }
-  };
+
+    // OTHER ROLES
+    navigate(data.redirect);
+
+  } catch (err) {
+    alert("Server error. Please try again.");
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   return (
     <div className="login-wrapper">

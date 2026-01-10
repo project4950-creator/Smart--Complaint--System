@@ -12,7 +12,7 @@ const SubmitComplaint = () => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [area, setArea] = useState("");
-const [locationInfo, setLocationInfo] = useState("");
+  const [locationInfo, setLocationInfo] = useState("");
   const [wasteType, setWasteType] = useState("");
   const [beforeImage, setBeforeImage] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -31,13 +31,10 @@ const [locationInfo, setLocationInfo] = useState("");
     try {
       setDetecting(true);
 
-      const response = await fetch(
-        `${API_BASE}/api/detect-waste/`,
-        {
-          method: "POST",
-          body: formData,
-        }
-      );
+      const response = await fetch(`${API_BASE}/api/detect-waste/`, {
+        method: "POST",
+        body: formData,
+      });
 
       const data = await response.json();
 
@@ -57,7 +54,7 @@ const [locationInfo, setLocationInfo] = useState("");
 
   // 🔹 Submit complaint
   const handleSubmit = async () => {
-    if (!title || !description || !area || !subArea || !beforeImage) {
+    if (!title || !description || !area || !locationInfo || !beforeImage) {
       alert("Please fill all required fields");
       return;
     }
@@ -74,19 +71,16 @@ const [locationInfo, setLocationInfo] = useState("");
     formData.append("description", description);
     formData.append("waste_type", wasteType || "Unknown");
     formData.append("area", area);
-    formData.append("sub_area", subArea);
+    formData.append("location_info", locationInfo);
     formData.append("before_image", beforeImage);
 
     try {
       setLoading(true);
 
-      const response = await fetch(
-        `${API_BASE}/api/complaint/create/`,
-        {
-          method: "POST",
-          body: formData,
-        }
-      );
+      const response = await fetch(`${API_BASE}/api/complaint/create/`, {
+        method: "POST",
+        body: formData,
+      });
 
       const data = await response.json();
 
@@ -97,14 +91,13 @@ const [locationInfo, setLocationInfo] = useState("");
 
       alert("Complaint submitted successfully ✅");
 
-      // ✅ mark first complaint submitted
       localStorage.setItem("has_submitted_complaint", "true");
 
-      // reset form
+      // 🔹 Reset form
       setTitle("");
       setDescription("");
       setArea("");
-      setSubArea("");
+      setLocationInfo("");
       setWasteType("");
       setBeforeImage(null);
       document.getElementById("beforeImage").value = "";
@@ -173,32 +166,31 @@ const [locationInfo, setLocationInfo] = useState("");
           />
 
           <select
-  className="form-control mb-3"
-  value={area}
-  onChange={(e) => {
-    setArea(e.target.value);
-    setLocationInfo(""); // reset textbox when area changes
-  }}
->
-  <option value="">Select Area</option>
-  <option value="DNICA School">DNICA School</option>
-  <option value="MB Science College">MB Science College</option>
-  <option value="SVP Highschool">SVP Highschool</option>
-  <option value="Mahatma Gandhi Vidyalaya">
-    Mahatma Gandhi Vidyalaya
-  </option>
-</select>
+            className="form-control mb-3"
+            value={area}
+            onChange={(e) => {
+              setArea(e.target.value);
+              setLocationInfo("");
+            }}
+          >
+            <option value="">Select Area</option>
+            <option value="DNICA School">DNICA School</option>
+            <option value="MB Science College">MB Science College</option>
+            <option value="SVP Highschool">SVP Highschool</option>
+            <option value="Mahatma Gandhi Vidyalaya">
+              Mahatma Gandhi Vidyalaya
+            </option>
+          </select>
 
-{area && (
-  <input
-    type="text"
-    className="form-control mb-4"
-    placeholder="Enter location details (e.g., Room 203, 2nd Floor)"
-    value={locationInfo}
-    onChange={(e) => setLocationInfo(e.target.value)}
-  />
-)}
-
+          {area && (
+            <input
+              type="text"
+              className="form-control mb-4"
+              placeholder="Enter location details (e.g., Room 203, 2nd Floor)"
+              value={locationInfo}
+              onChange={(e) => setLocationInfo(e.target.value)}
+            />
+          )}
 
           <button
             className="btn btn-detect mb-3"

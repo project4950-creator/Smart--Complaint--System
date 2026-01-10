@@ -10,8 +10,8 @@ const AdminTable = () => {
   const loadData = async () => {
     try {
       const [cRes, kRes] = await Promise.all([
-        fetch(`${API_BASE}/admin/complaints/`),
-        fetch(`${API_BASE}/admin/karmacharis/`)
+        fetch(`${API_BASE}/api/admin/complaints/`),
+        fetch(`${API_BASE}/api/admin/karmacharis/`)
       ]);
 
       const cData = await cRes.json();
@@ -35,7 +35,7 @@ const AdminTable = () => {
 
     try {
       const res = await fetch(
-        `${API_BASE}/admin/complaints/${id}/`,
+        `${API_BASE}/api/admin/complaints/${id}/`,
         { method: "DELETE" }
       );
       const data = await res.json();
@@ -123,3 +123,4 @@ const AdminTable = () => {
 };
 
 export default AdminTable;
+

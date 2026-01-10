@@ -1,146 +1,126 @@
-/* ===============================
-   GLOBAL RESET
-================================ */
-* {
-  box-sizing: border-box;
-}
+import { useEffect, useState } from "react";
+import "./AdminComplaintTable.css";
 
-body {
-  font-family: Inter, system-ui, Arial, sans-serif;
-}
+const API_BASE = import.meta.env.VITE_API_URL;
 
-/* ===============================
-   CONTAINER
-================================ */
-div[style*="padding: 30px"] {
-  max-width: 1400px;
-  margin: auto;
-  padding: 16px !important;
-}
+const AdminTable = () => {
+  const [complaints, setComplaints] = useState([]);
+  const [karmacharis, setKarmacharis] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-/* ===============================
-   HEADINGS
-================================ */
-h2 {
-  font-size: 1.4rem;
-  margin: 20px 0 12px;
-  font-weight: 700;
-}
+  const loadData = async () => {
+    try {
+      const [cRes, kRes] = await Promise.all([
+        fetch(`${API_BASE}/api/admin/complaints/`),
+        fetch(`${API_BASE}/api/admin/karmacharis/`)
+      ]);
 
-/* ===============================
-   TABLE BASE
-================================ */
-table {
-  width: 100%;
-  border-collapse: collapse;
-  background: #ffffff;
-  border-radius: 12px;
-  overflow: hidden;
-}
+      const cData = await cRes.json();
+      const kData = await kRes.json();
 
-/* Table shadow */
-table {
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
-}
+      setComplaints(cData);
+      setKarmacharis(kData);
+    } catch (err) {
+      alert("Failed to load admin data");
+    } finally {
+      setLoading(false);
+    }
+  };
 
-/* ===============================
-   TABLE HEADER
-================================ */
-thead {
-  background: #f3f4f6;
-}
+  useEffect(() => {
+    loadData();
+  }, []);
 
-th {
-  padding: 12px;
-  text-align: left;
-  font-size: 0.95rem;
-  font-weight: 600;
-  color: #111827;
-}
+  const deleteComplaint = async (id) => {
+    if (!window.confirm("Delete this complaint?")) return;
 
-/* ===============================
-   TABLE BODY
-================================ */
-td {
-  padding: 12px;
-  font-size: 0.9rem;
-  border-top: 1px solid #e5e7eb;
-  color: #1f2937;
-}
+    try {
+      const res = await fetch(
+        `${API_BASE}/api/admin/complaints/${id}/`,
+        { method: "DELETE" }
+      );
+      const data = await res.json();
+      alert(data.message);
+      loadData();
+    } catch {
+      alert("Delete failed");
+    }
+  };
 
-tr:hover {
-  background: #f9fafb;
-}
+  if (loading) return <p>Loading...</p>;
 
-/* ===============================
-   DELETE BUTTON
-================================ */
-button {
-  background: #dc2626;
-  color: #ffffff;
-  border: none;
-  padding: 6px 14px;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 0.85rem;
-}
+  return (
+    <div className="container">
+      {/* ================= COMPLAINTS TABLE ================= */}
+      <h2>📋 Complaints (Admin)</h2>
 
-button:hover {
-  background: #b91c1c;
-}
+      <table className="complaints-table">
+        <thead>
+          <tr>
+            <th>Complaint #</th>
+            <th>Title</th>
+            <th>Area</th>
+            <th>Status</th>
+            <th>Karmachari</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {complaints.map((c) => (
+            <tr key={c.id}>
+              <td>{c.complaint_no}</td>
+              <td>{c.title}</td>
+              <td>{c.area}</td>
+              <td>{c.status}</td>
+              <td>{c.karmachari ? c.karmachari.name : "—"}</td>
+              <td>
+                <button
+                  className="delete-btn"
+                  onClick={() => deleteComplaint(c.id)}
+                >
+                  Delete
+                </button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
 
-/* ===============================
-   STATUS COLOR FIX
-================================ */
-td b {
-  font-weight: 600;
-}
+      {/* ================= KARMA CHARIS TABLE ================= */}
+      <h2>🧹 Safai Karmacharis</h2>
 
-/* ===============================
-   RESPONSIVE (MOBILE)
-================================ */
-@media (max-width: 768px) {
-  table {
-    display: block;
-    width: 100%;
-    overflow-x: auto;
-    white-space: nowrap;
-  }
+      <table className="karmacharis-table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Phone</th>
+            <th>Area</th>
+            <th>Status</th>
+            <th>Current Complaint</th>
+          </tr>
+        </thead>
+        <tbody>
+          {karmacharis.map((k) => (
+            <tr key={k.id}>
+              <td>{k.name}</td>
+              <td>{k.phone}</td>
+              <td>{k.area}</td>
+              <td>
+                <b className={k.status === "FREE" ? "status-free" : "status-busy"}>
+                  {k.status}
+                </b>
+              </td>
+              <td>
+                {k.current_complaint
+                  ? `#${k.current_complaint.complaint_no}`
+                  : "—"}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+};
 
-  thead {
-    font-size: 0.85rem;
-  }
-
-  th,
-  td {
-    padding: 10px;
-    font-size: 0.85rem;
-  }
-
-  button {
-    padding: 6px 10px;
-    font-size: 0.8rem;
-  }
-}
-
-/* ===============================
-   TABLET VIEW
-================================ */
-@media (min-width: 769px) and (max-width: 1024px) {
-  th,
-  td {
-    font-size: 0.9rem;
-    padding: 12px;
-  }
-}
-
-/* ===============================
-   LARGE SCREENS
-================================ */
-@media (min-width: 1440px) {
-  th,
-  td {
-    font-size: 1rem;
-    padding: 14px;
-  }
-}
+export default AdminTable;

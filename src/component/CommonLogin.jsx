@@ -3,9 +3,7 @@ import { FaUser, FaLock, FaPhone } from "react-icons/fa";
 import { useState } from "react";
 import "./CommonLogin.css";
 
-const API_BASE = import.meta.env.VITE_API_URL;
-
-const CommonLogin = ({ role = "Citizen", signupPath }) => {
+const CommonLogin = ({ role = "Citizen", signupPath, forgotPath }) => {
   const navigate = useNavigate();
 
   const [form, setForm] = useState({
@@ -25,7 +23,7 @@ const CommonLogin = ({ role = "Citizen", signupPath }) => {
     try {
       setLoading(true);
 
-      const res = await fetch(`${API_BASE}/api/login/`, {
+      const res = await fetch("http://127.0.0.1:8000/api/login/", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(form),
@@ -38,28 +36,33 @@ const CommonLogin = ({ role = "Citizen", signupPath }) => {
         return;
       }
 
-      // 🔥 CLEAR OLD SESSION DATA
-      localStorage.clear();
-
-      // ✅ SAVE NEW SESSION
+      // Save session data
       localStorage.setItem("user_id", data.user_id);
       localStorage.setItem("role", data.role);
+      if (data.area) localStorage.setItem("area", data.area);
 
-      if (data.area) {
-        localStorage.setItem("area", data.area);
-      }
+      // Redirect based on backend response
+      // Save session data
+localStorage.setItem("user_id", data.user_id);
+localStorage.setItem("role", data.role);
+if (data.area) localStorage.setItem("area", data.area);
 
-      // ✅ CITIZEN FLOW (ALWAYS GO TO SUBMIT FIRST)
-      if (data.role === "CITIZEN") {
-        navigate("/submit-complaint", { replace: true });
-        return;
-      }
+// ✅ CITIZEN FIRST VISIT LOGIC
+if (data.role === "CITIZEN") {
+  const hasSubmitted = localStorage.getItem("has_submitted_complaint");
 
-      // ✅ OTHER ROLES
-      navigate(data.redirect || "/", { replace: true });
+  if (!hasSubmitted) {
+    navigate("/submit-complaint"); // first time
+  } else {
+    navigate("/citizen-dashboard"); // revisit
+  }
+  return;
+}
+
+// Other roles
+navigate(data.redirect);
 
     } catch (err) {
-      console.error(err);
       alert("Server error. Please try again.");
     } finally {
       setLoading(false);
@@ -75,12 +78,17 @@ const CommonLogin = ({ role = "Citizen", signupPath }) => {
         </div>
 
         <h3 className="login-title">{role} Login</h3>
+        <p className="login-subtitle">
+          Welcome back! Please enter your details
+        </p>
 
+        {/* Username */}
         <label>Username</label>
         <div className="input-box">
           <FaUser />
           <input
             type="text"
+            placeholder="Enter your username"
             value={form.username}
             onChange={(e) =>
               setForm({ ...form, username: e.target.value })
@@ -88,11 +96,13 @@ const CommonLogin = ({ role = "Citizen", signupPath }) => {
           />
         </div>
 
+        {/* Password */}
         <label>Password</label>
         <div className="input-box">
           <FaLock />
           <input
             type="password"
+            placeholder="Enter your password"
             value={form.password}
             onChange={(e) =>
               setForm({ ...form, password: e.target.value })
@@ -100,11 +110,13 @@ const CommonLogin = ({ role = "Citizen", signupPath }) => {
           />
         </div>
 
+        {/* Phone */}
         <label>Phone Number</label>
         <div className="input-box">
           <FaPhone className="phone-icon"/>
           <input
             type="text"
+            placeholder="Enter your phone number"
             value={form.phone}
             onChange={(e) =>
               setForm({ ...form, phone: e.target.value })
@@ -112,6 +124,15 @@ const CommonLogin = ({ role = "Citizen", signupPath }) => {
           />
         </div>
 
+        {/* Forgot Password */}
+        <div
+          className="forgot-link"
+          onClick={() => navigate(forgotPath || "/forgot")}
+        >
+          Forgot password?
+        </div>
+
+        {/* Login Button */}
         <button
           className="btn-login"
           onClick={handleLogin}
@@ -120,6 +141,7 @@ const CommonLogin = ({ role = "Citizen", signupPath }) => {
           {loading ? "Logging in..." : "Login"}
         </button>
 
+        {/* Signup Button */}
         <button
           className="btn-signup"
           onClick={() => navigate(signupPath || "/signup")}

@@ -1,12 +1,10 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import "./KarmachariDashboard.css";
 
-// ✅ API BASE FROM ENV
+// ✅ API BASE FROM ENV (ROOT ONLY)
 const API_BASE = import.meta.env.VITE_API_URL;
 
 const KarmachariDashboard = () => {
-  const navigate = useNavigate();
   const karmachariId = localStorage.getItem("user_id");
 
   const [complaints, setComplaints] = useState([]);
@@ -19,6 +17,7 @@ const KarmachariDashboard = () => {
   useEffect(() => {
     if (!karmachariId) {
       setLoading(false);
+      setError("Karmachari not logged in.");
       return;
     }
 
@@ -49,7 +48,7 @@ const KarmachariDashboard = () => {
   // ✅ Submit work with after image
   const submitWork = async () => {
     if (!selectedComplaint || !afterImage) {
-      alert("Select complaint and upload image");
+      alert("Select a complaint and upload an image");
       return;
     }
 
@@ -59,10 +58,13 @@ const KarmachariDashboard = () => {
       formData.append("karmachari_id", karmachariId);
       formData.append("after_image", afterImage);
 
-      const res = await fetch(`${API_BASE}/api/karmachari/submit-work/`, {
-        method: "POST",
-        body: formData,
-      });
+      const res = await fetch(
+        `${API_BASE}/api/karmachari/submit-work/`,
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
 
       const data = await res.json();
 
@@ -79,37 +81,24 @@ const KarmachariDashboard = () => {
     }
   };
 
-  // ✅ Logout function
-  const handleLogout = () => {
-    localStorage.clear();
-    navigate("/karmachari-login");
-  };
-
   return (
     <div className="karmachari-dashboard">
       <h2>🧹 Cleanup Dashboard</h2>
 
-      <button
-        className="btn btn-danger logout-btn"
-        onClick={handleLogout}
-        style={{ marginBottom: "20px" }}
-      >
-        Logout
-      </button>
-
       {loading && <p>Loading complaints...</p>}
       {error && <p style={{ color: "red" }}>{error}</p>}
 
-      {!loading && complaints.length === 0 && (
-        <p>No assigned complaints. If you think this is an error, contact admin.</p>
+      {!loading && complaints.length === 0 && !error && (
+        <p>No assigned complaints.</p>
       )}
 
       {!loading && complaints.length > 0 && (
         <>
+          {/* Complaints Table */}
           <table className="dashboard-table">
             <thead>
               <tr>
-                <th>ID</th>
+                <th>#</th>
                 <th>Before Image</th>
                 <th>Title</th>
                 <th>Area</th>
@@ -119,7 +108,7 @@ const KarmachariDashboard = () => {
             <tbody>
               {complaints.map((c, index) => (
                 <tr key={c.id}>
-                  <td>{index + 1}</td>
+                  <td>{c.complaint_no || index + 1}</td>
                   <td>
                     {c.before_image_url ? (
                       <img
@@ -139,17 +128,16 @@ const KarmachariDashboard = () => {
             </tbody>
           </table>
 
-          {/* SUBMIT SECTION */}
+          {/* Submit Work Section */}
           <div className="form-section">
-            <h3>Submit Work</h3>
+            <h3>Submit Completed Work</h3>
             <select
               value={selectedComplaint}
               onChange={(e) => setSelectedComplaint(e.target.value)}
             >
-              <option value="">Select Complaint ID</option>
-              {complaints.map((c, index) => (
+              {complaints.map((c) => (
                 <option key={c.id} value={c.id}>
-                  {index + 1} - {c.title}
+                  {c.complaint_no || c.id} - {c.title}
                 </option>
               ))}
             </select>

@@ -5,16 +5,19 @@
   width: 100%;
   padding: 1rem 0.5rem;
   text-align: center;
-  background: linear-gradient(135deg, #dbeafe, #e0e7ff, #fae8ff); /* Home page gradient */
-  color: #000000; /* black font */
+  background: linear-gradient(135deg, #dbeafe, #e0e7ff, #fae8ff);
+  color: #000000;
   font-size: 0.95rem;
-  font-weight: 700; /* bold text */
+  font-weight: 700;
   box-shadow: 0 -5px 15px rgba(0, 0, 0, 0.1);
   z-index: 10;
+
+  /* 🔹 Layout */
+  position: relative;
   display: flex;
   justify-content: center;
-  flex-wrap: wrap; /* wrap on small screens */
   align-items: center;
+  flex-wrap: wrap;
   gap: 0.5rem;
 }
 
@@ -24,11 +27,20 @@
 
 /* Developer names styling */
 .app-footer p span {
-  font-weight: 700;       /* bold for names */
-  color: #1e40af;         /* dark blue */
+  font-weight: 700;
+  color: #1e40af;
 }
 
-/* Responsive adjustments */
+/* 🔹 Logout Button (Bottom Right) */
+.logout-btn {
+  position: absolute;
+  right: 20px;
+  bottom: 12px;
+  padding: 6px 14px;
+  font-size: 14px;
+}
+
+/* 🔹 Mobile Responsive */
 @media (max-width: 480px) {
   .app-footer {
     font-size: 0.85rem;
@@ -36,10 +48,9 @@
     gap: 0.2rem;
     padding: 0.8rem 0.5rem;
   }
-}
 
-.logout-btn {
-  margin-top: 10px;
-  padding: 6px 14px;
-  font-size: 14px;
+  .logout-btn {
+    position: static;
+    margin-top: 8px;
+  }
 }

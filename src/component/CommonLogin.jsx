@@ -23,11 +23,14 @@ const CommonLogin = ({ role = "Citizen", signupPath, forgotPath }) => {
     try {
       setLoading(true);
 
-      const res = await fetch("http://127.0.0.1:8000/api/login/", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
-      });
+      const res = await fetch(
+        `${import.meta.env.VITE_API_URL}/api/login/`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(form),
+        }
+      );
 
       const data = await res.json();
 
@@ -41,26 +44,20 @@ const CommonLogin = ({ role = "Citizen", signupPath, forgotPath }) => {
       localStorage.setItem("role", data.role);
       if (data.area) localStorage.setItem("area", data.area);
 
-      // Redirect based on backend response
-      // Save session data
-localStorage.setItem("user_id", data.user_id);
-localStorage.setItem("role", data.role);
-if (data.area) localStorage.setItem("area", data.area);
+      // CITIZEN FIRST VISIT LOGIC
+      if (data.role === "CITIZEN") {
+        const hasSubmitted = localStorage.getItem("has_submitted_complaint");
 
-// ✅ CITIZEN FIRST VISIT LOGIC
-if (data.role === "CITIZEN") {
-  const hasSubmitted = localStorage.getItem("has_submitted_complaint");
+        if (!hasSubmitted) {
+          navigate("/submit-complaint");
+        } else {
+          navigate("/citizen-dashboard");
+        }
+        return;
+      }
 
-  if (!hasSubmitted) {
-    navigate("/submit-complaint"); // first time
-  } else {
-    navigate("/citizen-dashboard"); // revisit
-  }
-  return;
-}
-
-// Other roles
-navigate(data.redirect);
+      // Other roles
+      navigate(data.redirect);
 
     } catch (err) {
       alert("Server error. Please try again.");

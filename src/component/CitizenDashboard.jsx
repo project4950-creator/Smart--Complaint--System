@@ -190,6 +190,12 @@ const CitizenDashboard = () => {
                   ➕ Submit New Complaint
                 </button>
               </div>
+            <div>
+             <button className="btn btn-danger logout-btn" onClick={handleLogout}>
+        Logout
+      </button>
+            
+            </div>
             </>
           )}
         </>

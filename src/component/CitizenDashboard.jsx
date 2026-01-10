@@ -27,6 +27,12 @@ const CitizenDashboard = () => {
       return;
     }
 
+    const handleLogout = () => {
+      localStorage.clear();
+      navigate("/citizen-login");
+    };
+
+    
     const fetchComplaints = async () => {
       try {
         const res = await fetch(

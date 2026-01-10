@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import "./AdminComplaintTable.css";
 
 const API_BASE = import.meta.env.VITE_API_URL;
 
@@ -123,5 +124,6 @@ const AdminTable = () => {
 };
 
 export default AdminTable;
+
 
 

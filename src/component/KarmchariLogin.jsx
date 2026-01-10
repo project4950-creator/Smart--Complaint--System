@@ -3,7 +3,7 @@ import CommonLogin from "./CommonLogin";
 const KarmchariLogin = () => {
   return (
     <CommonLogin
-      role="Karmchari"
+      role="Safaidoot"
       signupPath="/signup"
       forgotPath="/forgot"
     />

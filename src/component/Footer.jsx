@@ -5,12 +5,11 @@ const Footer = () => {
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    // ✅ Clear auth-related data only
-    localStorage.removeItem("user_id");
-    localStorage.removeItem("has_submitted_complaint");
+    // 🔥 Clear ALL session-related data
+    localStorage.clear();
 
-    // ✅ Redirect to home
-    navigate("/");
+    // 🔁 Redirect to login page
+    navigate("/citizen-login", { replace: true });
   };
 
   return (

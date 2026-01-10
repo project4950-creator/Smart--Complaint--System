@@ -199,6 +199,19 @@ const SubmitComplaint = () => {
           >
             {loading ? "Submitting..." : "Submit"}
           </button>
+          <div
+            style={{
+              marginTop: "14px",
+              textAlign: "center",
+              color: "#4f46e5",
+              fontWeight: "600",
+              cursor: "pointer",
+            }}
+            onClick={() => navigate("/citizen-dashboard")}
+          >
+            View My Complaints
+          </div>
+
         </div>
       </div>
     </div>

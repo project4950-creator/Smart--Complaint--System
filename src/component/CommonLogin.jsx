@@ -102,7 +102,7 @@ const CommonLogin = ({ role = "Citizen", signupPath }) => {
 
         <label>Phone Number</label>
         <div className="input-box">
-          <FaPhone />
+          <FaPhone className="phone-icon"/>
           <input
             type="text"
             value={form.phone}

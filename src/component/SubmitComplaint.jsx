@@ -174,7 +174,7 @@ const SubmitComplaint = () => {
             }}
           >
             <option value="">Select Area</option>
-            <option value="DNICA School">DNICA School</option>
+            <option value="DN High School">DNICA School</option>
             <option value="MB Science College">MB Science College</option>
             <option value="SVP Highschool">SVP Highschool</option>
             <option value="Mahatma Gandhi Vidyalaya">

@@ -1,126 +1,43 @@
-import { useEffect, useState } from "react";
-import "./AdminComplaintTable.css";
+/* Container */
+.container {
+  padding: 30px;
+  max-width: 1400px;
+  margin: auto;
+}
 
-const API_BASE = import.meta.env.VITE_API_URL;
+/* Delete button */
+.delete-btn {
+  background: #dc2626;
+  color: #fff;
+  border: none;
+  padding: 6px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.85rem;
+}
 
-const AdminTable = () => {
-  const [complaints, setComplaints] = useState([]);
-  const [karmacharis, setKarmacharis] = useState([]);
-  const [loading, setLoading] = useState(true);
+.delete-btn:hover {
+  background: #b91c1c;
+}
 
-  const loadData = async () => {
-    try {
-      const [cRes, kRes] = await Promise.all([
-        fetch(`${API_BASE}/api/admin/complaints/`),
-        fetch(`${API_BASE}/api/admin/karmacharis/`)
-      ]);
+/* Status colors */
+.status-free {
+  color: green;
+  font-weight: 600;
+}
 
-      const cData = await cRes.json();
-      const kData = await kRes.json();
+.status-busy {
+  color: red;
+  font-weight: 600;
+}
 
-      setComplaints(cData);
-      setKarmacharis(kData);
-    } catch (err) {
-      alert("Failed to load admin data");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    loadData();
-  }, []);
-
-  const deleteComplaint = async (id) => {
-    if (!window.confirm("Delete this complaint?")) return;
-
-    try {
-      const res = await fetch(
-        `${API_BASE}/api/admin/complaints/${id}/`,
-        { method: "DELETE" }
-      );
-      const data = await res.json();
-      alert(data.message);
-      loadData();
-    } catch {
-      alert("Delete failed");
-    }
-  };
-
-  if (loading) return <p>Loading...</p>;
-
-  return (
-    <div className="container">
-      {/* ================= COMPLAINTS TABLE ================= */}
-      <h2>📋 Complaints (Admin)</h2>
-
-      <table className="complaints-table">
-        <thead>
-          <tr>
-            <th>Complaint #</th>
-            <th>Title</th>
-            <th>Area</th>
-            <th>Status</th>
-            <th>Karmachari</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          {complaints.map((c) => (
-            <tr key={c.id}>
-              <td>{c.complaint_no}</td>
-              <td>{c.title}</td>
-              <td>{c.area}</td>
-              <td>{c.status}</td>
-              <td>{c.karmachari ? c.karmachari.name : "—"}</td>
-              <td>
-                <button
-                  className="delete-btn"
-                  onClick={() => deleteComplaint(c.id)}
-                >
-                  Delete
-                </button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-
-      {/* ================= KARMA CHARIS TABLE ================= */}
-      <h2>🧹 Safai Karmacharis</h2>
-
-      <table className="karmacharis-table">
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Phone</th>
-            <th>Area</th>
-            <th>Status</th>
-            <th>Current Complaint</th>
-          </tr>
-        </thead>
-        <tbody>
-          {karmacharis.map((k) => (
-            <tr key={k.id}>
-              <td>{k.name}</td>
-              <td>{k.phone}</td>
-              <td>{k.area}</td>
-              <td>
-                <b className={k.status === "FREE" ? "status-free" : "status-busy"}>
-                  {k.status}
-                </b>
-              </td>
-              <td>
-                {k.current_complaint
-                  ? `#${k.current_complaint.complaint_no}`
-                  : "—"}
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
-  );
-};
-
-export default AdminTable;
+/* Optional: separate table styling */
+.complaints-table,
+.karmacharis-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
+}

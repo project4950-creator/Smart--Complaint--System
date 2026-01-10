@@ -391,3 +391,6 @@ html, body {
   height: 100%;
   overflow-x: hidden;
 }
+.phone-icon {
+  transform: rotate(90deg) scale(1.15);
+}

@@ -173,30 +173,32 @@ const SubmitComplaint = () => {
           />
 
           <select
-            className="form-control mb-3"
-            value={area}
-            onChange={(e) => {
-              setArea(e.target.value);
-              setSubArea("");
-            }}
-          >
-            <option value="">Select Area</option>
-            <option value="MB Science">M B Science</option>
-            <option value="DNICA School">DNICA School</option>
-            <option value="C P Patel">C P Patel</option>
-          </select>
+  className="form-control mb-3"
+  value={area}
+  onChange={(e) => {
+    setArea(e.target.value);
+    setLocationInfo(""); // reset textbox when area changes
+  }}
+>
+  <option value="">Select Area</option>
+  <option value="DNICA School">DNICA School</option>
+  <option value="MB Science">MB Science</option>
+  <option value="SVP Highschool">SVP Highschool</option>
+  <option value="Mahatma Gandhi Vidyalaya">
+    Mahatma Gandhi Vidyalaya
+  </option>
+</select>
 
-          {area && (
-            <select
-              className="form-control mb-4"
-              value={subArea}
-              onChange={(e) => setSubArea(e.target.value)}
-            >
-              <option value="">Select Sub Area</option>
-              <option value="Canteen">Canteen</option>
-              <option value="Playground">Playground</option>
-            </select>
-          )}
+{area && (
+  <input
+    type="text"
+    className="form-control mb-4"
+    placeholder="Enter location details (e.g., Room 203, 2nd Floor)"
+    value={locationInfo}
+    onChange={(e) => setLocationInfo(e.target.value)}
+  />
+)}
+
 
           <button
             className="btn btn-detect mb-3"

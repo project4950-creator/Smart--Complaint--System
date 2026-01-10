@@ -82,12 +82,13 @@ const CitizenDashboard = () => {
   };
 
   const steps = [
-    { label: "Pending", icon: Clock, color: "green" },
-    { label: "Assigned to Karmachari", icon: FileText, color: "blue" },
-    { label: "Sent to Contractor", icon: Send, color: "purple" },
-    { label: "Sent to Manager", icon: UserCog, color: "pink" },
-    { label: "Done", icon: CheckCircle2, color: "teal" },
-  ];
+  { label: "Pending", icon: Clock, color: "green" },
+  { label: "Assigned to Karmachari", icon: FileText, color: "blue" },
+  { label: "Work Completed", icon: Send, color: "purple" }, // SUBMITTED
+  { label: "Sent to Manager", icon: UserCog, color: "pink" },
+  { label: "Done", icon: CheckCircle2, color: "teal" },
+];
+
 
   return (
     <div className="dashboard-container">

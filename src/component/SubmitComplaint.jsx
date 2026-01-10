@@ -12,7 +12,7 @@ const SubmitComplaint = () => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [area, setArea] = useState("");
-  const [subArea, setSubArea] = useState("");
+const [locationInfo, setLocationInfo] = useState("");
   const [wasteType, setWasteType] = useState("");
   const [beforeImage, setBeforeImage] = useState(null);
   const [loading, setLoading] = useState(false);

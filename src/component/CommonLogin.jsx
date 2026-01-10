@@ -1,154 +1,120 @@
-import { useNavigate } from "react-router-dom";
-import { FaUser, FaLock, FaPhone } from "react-icons/fa";
-import { useState } from "react";
-import "./CommonLogin.css";
+import { useEffect, useState } from "react";
+import "./AdminComplaintTable.css";
 
-const CommonLogin = ({ role = "Citizen", signupPath, forgotPath }) => {
-  const navigate = useNavigate();
+// Use Vercel environment variable
+const API_BASE = process.env.VITE_API_URL;
 
-  const [form, setForm] = useState({
-    username: "",
-    password: "",
-    phone: "",
-  });
+const AdminTable = () => {
+  const [complaints, setComplaints] = useState([]);
+  const [karmacharis, setKarmacharis] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  const [loading, setLoading] = useState(false);
-
-  const handleLogin = async () => {
-    if (!form.username || !form.password || !form.phone) {
-      alert("All fields are required");
-      return;
-    }
-
+  const loadData = async () => {
     try {
-      setLoading(true);
+      const [cRes, kRes] = await Promise.all([
+        fetch(`${API_BASE}/api/admin/complaints/`),
+        fetch(`${API_BASE}/api/admin/karmacharis/`)
+      ]);
 
-      const res = await fetch(
-        `${import.meta.env.VITE_API_URL}/api/login/`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(form),
-        }
-      );
+      const cData = await cRes.json();
+      const kData = await kRes.json();
 
-      const data = await res.json();
-
-      if (!res.ok) {
-        alert(data.message || "Login failed");
-        return;
-      }
-
-      // Save session data
-      localStorage.setItem("user_id", data.user_id);
-      localStorage.setItem("role", data.role);
-      if (data.area) localStorage.setItem("area", data.area);
-
-      // CITIZEN FIRST VISIT LOGIC
-      if (data.role === "CITIZEN") {
-        const hasSubmitted = localStorage.getItem("has_submitted_complaint");
-
-        if (!hasSubmitted) {
-          navigate("/submit-complaint");
-        } else {
-          navigate("/citizen-dashboard");
-        }
-        return;
-      }
-
-      // Other roles
-      navigate(data.redirect);
-
+      setComplaints(cData);
+      setKarmacharis(kData);
     } catch (err) {
-      alert("Server error. Please try again.");
+      alert("Failed to load admin data");
     } finally {
       setLoading(false);
     }
   };
 
+  useEffect(() => {
+    loadData();
+  }, []);
+
+  const deleteComplaint = async (id) => {
+    if (!window.confirm("Delete this complaint?")) return;
+
+    try {
+      const res = await fetch(`${API_BASE}/api/admin/complaints/${id}/`, {
+        method: "DELETE"
+      });
+      const data = await res.json();
+      alert(data.message);
+      loadData();
+    } catch {
+      alert("Delete failed");
+    }
+  };
+
+  if (loading) return <p>Loading...</p>;
+
   return (
-    <div className="login-wrapper">
-      <div className="login-card">
+    <div className="container">
+      {/* ================= COMPLAINTS TABLE ================= */}
+      <h2>📋 Complaints (Admin)</h2>
+      <table className="complaints-table">
+        <thead>
+          <tr>
+            <th>Complaint #</th>
+            <th>Title</th>
+            <th>Area</th>
+            <th>Status</th>
+            <th>Karmachari</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {complaints.map((c) => (
+            <tr key={c.id}>
+              <td>{c.complaint_no}</td>
+              <td>{c.title}</td>
+              <td>{c.area}</td>
+              <td>{c.status}</td>
+              <td>{c.karmachari ? c.karmachari.name : "—"}</td>
+              <td>
+                <button
+                  className="delete-btn"
+                  onClick={() => deleteComplaint(c.id)}
+                >
+                  Delete
+                </button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
 
-        <div className="login-icon">
-          <FaUser />
-        </div>
-
-        <h3 className="login-title">{role} Login</h3>
-        <p className="login-subtitle">
-          Welcome back! Please enter your details
-        </p>
-
-        {/* Username */}
-        <label>Username</label>
-        <div className="input-box">
-          <FaUser />
-          <input
-            type="text"
-            placeholder="Enter your username"
-            value={form.username}
-            onChange={(e) =>
-              setForm({ ...form, username: e.target.value })
-            }
-          />
-        </div>
-
-        {/* Password */}
-        <label>Password</label>
-        <div className="input-box">
-          <FaLock />
-          <input
-            type="password"
-            placeholder="Enter your password"
-            value={form.password}
-            onChange={(e) =>
-              setForm({ ...form, password: e.target.value })
-            }
-          />
-        </div>
-
-        {/* Phone */}
-        <label>Phone Number</label>
-        <div className="input-box">
-          <FaPhone className="phone-icon"/>
-          <input
-            type="text"
-            placeholder="Enter your phone number"
-            value={form.phone}
-            onChange={(e) =>
-              setForm({ ...form, phone: e.target.value })
-            }
-          />
-        </div>
-
-        {/* Forgot Password */}
-        <div
-          className="forgot-link"
-          onClick={() => navigate(forgotPath || "/forgot")}
-        >
-          Forgot password?
-        </div>
-
-        {/* Login Button */}
-        <button
-          className="btn-login"
-          onClick={handleLogin}
-          disabled={loading}
-        >
-          {loading ? "Logging in..." : "Login"}
-        </button>
-
-        {/* Signup Button */}
-        <button
-          className="btn-signup"
-          onClick={() => navigate(signupPath || "/signup")}
-        >
-          Sign Up
-        </button>
-
-      </div>
+      {/* ================= KARMA CHARIS TABLE ================= */}
+      <h2>🧹 Safai Karmacharis</h2>
+      <table className="karmacharis-table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Phone</th>
+            <th>Area</th>
+            <th>Status</th>
+            <th>Current Complaint</th>
+          </tr>
+        </thead>
+        <tbody>
+          {karmacharis.map((k) => (
+            <tr key={k.id}>
+              <td>{k.name}</td>
+              <td>{k.phone}</td>
+              <td>{k.area}</td>
+              <td>
+                <b className={k.status === "FREE" ? "status-free" : "status-busy"}>
+                  {k.status}
+                </b>
+              </td>
+              <td>{k.current_complaint ? `#${k.current_complaint.complaint_no}` : "—"}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 };
 
-export default CommonLogin;
+export default AdminTable;

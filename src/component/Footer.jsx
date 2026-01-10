@@ -43,9 +43,7 @@ const Footer = () => {
         </a>
       </p>
 
-      <button className="btn btn-danger logout-btn" onClick={handleLogout}>
-        Logout
-      </button>
+     
     </footer>
   );
 };

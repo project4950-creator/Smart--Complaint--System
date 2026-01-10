@@ -7,20 +7,24 @@ const LandingRedirect = () => {
   useEffect(() => {
     const userId = localStorage.getItem("user_id");
     const role = localStorage.getItem("role");
-    const hasSubmitted = localStorage.getItem("has_submitted_complaint");
+    const hasSubmitted =
+      localStorage.getItem("has_submitted_complaint") === "true";
 
     if (!userId) {
-      navigate("/citizen-login");
+      navigate("/citizen-login", { replace: true });
       return;
     }
 
     if (role === "CITIZEN") {
-      navigate(hasSubmitted ? "/citizen-dashboard" : "/submit-complaint");
+      navigate(
+        hasSubmitted ? "/citizen-dashboard" : "/submit-complaint",
+        { replace: true }
+      );
       return;
     }
 
-    navigate("/"); // fallback
-  }, []);
+    navigate("/", { replace: true });
+  }, [navigate]);
 
   return null;
 };

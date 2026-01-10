@@ -3,11 +3,7 @@ import { FaUser, FaLock, FaPhone } from "react-icons/fa";
 import { useState } from "react";
 import "./CommonLogin.css";
 
-// ✅ API BASE FROM ENV
-const API_BASE = import.meta.env.VITE_API_URL;
-
 const CommonLogin = ({ role = "Citizen", signupPath, forgotPath }) => {
-const CommonLogin = ({ role = "Citizen", signupPath }) => {
   const navigate = useNavigate();
 
   const [form, setForm] = useState({
@@ -27,11 +23,10 @@ const CommonLogin = ({ role = "Citizen", signupPath }) => {
     try {
       setLoading(true);
 
-      const res = await fetch(`${API_BASE}/api/login/`, {
+      const BASE_URL = import.meta.env.VITE_API_URL; // 👉 use env base URL
+
+      const res = await fetch(`${BASE_URL}/api/login/`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(form),
       });
@@ -43,45 +38,28 @@ const CommonLogin = ({ role = "Citizen", signupPath }) => {
         return;
       }
 
-      // ✅ SAVE SESSION DATA
-      // 🔥 CLEAR OLD SESSION DATA
-      localStorage.clear();
-
-      // ✅ SAVE NEW SESSION
+      // Save session data
       localStorage.setItem("user_id", data.user_id);
       localStorage.setItem("role", data.role);
+      if (data.area) localStorage.setItem("area", data.area);
 
-      if (data.area) {
-        localStorage.setItem("area", data.area);
-      }
-
-      // ✅ CITIZEN FLOW
-      // ✅ CITIZEN FLOW (ALWAYS GO TO SUBMIT FIRST)
+      // CITIZEN FIRST VISIT LOGIC
       if (data.role === "CITIZEN") {
-        const hasSubmitted =
-          localStorage.getItem("has_submitted_complaint") === "true";
-
-        navigate(
-          hasSubmitted
-            ? "/citizen-dashboard"
-            : "/submit-complaint",
-          { replace: true }
+        const hasSubmitted = localStorage.getItem(
+          "has_submitted_complaint"
         );
-        navigate("/submit-complaint", { replace: true });
+
+        if (!hasSubmitted) {
+          navigate("/submit-complaint"); // first time
+        } else {
+          navigate("/citizen-dashboard"); // revisit
+        }
         return;
       }
 
-      // ✅ OTHER ROLES (ADMIN / STAFF / MANAGER)
-      if (data.redirect) {
-        navigate(data.redirect, { replace: true });
-      } else {
-        navigate("/", { replace: true });
-      }
-      // ✅ OTHER ROLES
-      navigate(data.redirect || "/", { replace: true });
-
+      // Other roles
+      navigate(data.redirect);
     } catch (err) {
-      console.error(err);
       alert("Server error. Please try again.");
     } finally {
       setLoading(false);
@@ -91,7 +69,6 @@ const CommonLogin = ({ role = "Citizen", signupPath }) => {
   return (
     <div className="login-wrapper">
       <div className="login-card">
-
         <div className="login-icon">
           <FaUser />
         </div>
@@ -101,7 +78,7 @@ const CommonLogin = ({ role = "Citizen", signupPath }) => {
           Welcome back! Please enter your details
         </p>
 
-        {/* USERNAME */}
+        {/* Username */}
         <label>Username</label>
         <div className="input-box">
           <FaUser />
@@ -115,7 +92,7 @@ const CommonLogin = ({ role = "Citizen", signupPath }) => {
           />
         </div>
 
-        {/* PASSWORD */}
+        {/* Password */}
         <label>Password</label>
         <div className="input-box">
           <FaLock />
@@ -129,11 +106,10 @@ const CommonLogin = ({ role = "Citizen", signupPath }) => {
           />
         </div>
 
-        {/* PHONE */}
+        {/* Phone */}
         <label>Phone Number</label>
         <div className="input-box">
           <FaPhone className="phone-icon" />
-          <FaPhone />
           <input
             type="text"
             placeholder="Enter your phone number"
@@ -144,15 +120,15 @@ const CommonLogin = ({ role = "Citizen", signupPath }) => {
           />
         </div>
 
-        {/* FORGOT PASSWORD */}
-        {/* <div
+        {/* Forgot Password */}
+        <div
           className="forgot-link"
           onClick={() => navigate(forgotPath || "/forgot")}
         >
           Forgot password?
-        </div> */}
+        </div>
 
-        {/* LOGIN BUTTON */}
+        {/* Login Button */}
         <button
           className="btn-login"
           onClick={handleLogin}
@@ -161,14 +137,13 @@ const CommonLogin = ({ role = "Citizen", signupPath }) => {
           {loading ? "Logging in..." : "Login"}
         </button>
 
-        {/* SIGNUP BUTTON */}
+        {/* Signup Button */}
         <button
           className="btn-signup"
           onClick={() => navigate(signupPath || "/signup")}
         >
           Sign Up
         </button>
-
       </div>
     </div>
   );

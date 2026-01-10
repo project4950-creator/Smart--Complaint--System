@@ -41,13 +41,16 @@ const CommonLogin = ({ role = "Citizen", signupPath, forgotPath }) => {
       // Save session data
       localStorage.setItem("user_id", data.user_id);
       localStorage.setItem("role", data.role);
-      if (data.area) localStorage.setItem("area", data.area);
-
-      // CITIZEN FIRST VISIT LOGIC
+      localStorage.setItem("is_logged_in", "true");
+      
+      // reset on every login
+      localStorage.setItem("has_submitted_complaint", "false");
+      
       if (data.role === "CITIZEN") {
-        const hasSubmitted = localStorage.getItem(
-          "has_submitted_complaint"
-        );
+        navigate("/submit-complaint");
+        return;
+      }
+
 
         if (!hasSubmitted) {
           navigate("/submit-complaint"); // first time

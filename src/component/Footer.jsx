@@ -5,10 +5,11 @@ const Footer = () => {
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    // 🔹 Clear session / auth data
-    localStorage.clear();
+    // ✅ Clear auth-related data only
+    localStorage.removeItem("user_id");
+    localStorage.removeItem("has_submitted_complaint");
 
-    // 🔹 Redirect to home page
+    // ✅ Redirect to home
     navigate("/");
   };
 
@@ -43,7 +44,6 @@ const Footer = () => {
         </a>
       </p>
 
-      {/* 🔹 Logout Button */}
       <button className="btn btn-danger logout-btn" onClick={handleLogout}>
         Logout
       </button>

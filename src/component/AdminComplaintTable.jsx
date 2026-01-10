@@ -50,12 +50,12 @@ const AdminTable = () => {
   if (loading) return <p>Loading...</p>;
 
   return (
-    <div style={{ padding: "30px" }}>
+    <div className="container">
       {/* ================= COMPLAINTS TABLE ================= */}
       <h2>📋 Complaints (Admin)</h2>
 
-      <table border="1" cellPadding="10" width="100%" style={{ marginBottom: 40 }}>
-        <thead style={{ background: "#f3f4f6" }}>
+      <table className="complaints-table">
+        <thead>
           <tr>
             <th>Complaint #</th>
             <th>Title</th>
@@ -75,7 +75,7 @@ const AdminTable = () => {
               <td>{c.karmachari ? c.karmachari.name : "—"}</td>
               <td>
                 <button
-                  style={{ background: "red", color: "#fff", border: "none", padding: "6px 12px" }}
+                  className="delete-btn"
                   onClick={() => deleteComplaint(c.id)}
                 >
                   Delete
@@ -89,8 +89,8 @@ const AdminTable = () => {
       {/* ================= KARMA CHARIS TABLE ================= */}
       <h2>🧹 Safai Karmacharis</h2>
 
-      <table border="1" cellPadding="10" width="100%">
-        <thead style={{ background: "#f3f4f6" }}>
+      <table className="karmacharis-table">
+        <thead>
           <tr>
             <th>Name</th>
             <th>Phone</th>
@@ -106,7 +106,7 @@ const AdminTable = () => {
               <td>{k.phone}</td>
               <td>{k.area}</td>
               <td>
-                <b style={{ color: k.status === "FREE" ? "green" : "red" }}>
+                <b className={k.status === "FREE" ? "status-free" : "status-busy"}>
                   {k.status}
                 </b>
               </td>
@@ -124,6 +124,3 @@ const AdminTable = () => {
 };
 
 export default AdminTable;
-
-
-

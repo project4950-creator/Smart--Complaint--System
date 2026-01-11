@@ -24,7 +24,7 @@ const CitizenDashboard = () => {
   // ✅ Logout
   const handleLogout = () => {
     localStorage.clear();
-    navigate("/citizen-login");
+    navigate("/");
   };
 
   useEffect(() => {

@@ -21,7 +21,7 @@ const CitizenDashboard = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  // ✅ Logout function needs to be in component scope
+  // ✅ Logout
   const handleLogout = () => {
     localStorage.clear();
     navigate("/citizen-login");
@@ -82,13 +82,12 @@ const CitizenDashboard = () => {
   };
 
   const steps = [
-  { label: "Pending", icon: Clock, color: "green" },
-  { label: "Assigned to Karmachari", icon: FileText, color: "blue" },
-  { label: "Work Completed", icon: Send, color: "purple" }, // SUBMITTED
-  { label: "Sent to Manager", icon: UserCog, color: "pink" },
-  { label: "Done", icon: CheckCircle2, color: "teal" },
-];
-
+    { label: "Pending", icon: Clock, color: "green" },
+    { label: "Assigned to Karmachari", icon: FileText, color: "blue" },
+    { label: "Work Completed", icon: Send, color: "purple" },
+    { label: "Sent to Manager", icon: UserCog, color: "pink" },
+    { label: "Done", icon: CheckCircle2, color: "teal" },
+  ];
 
   return (
     <div className="dashboard-container">
@@ -100,6 +99,26 @@ const CitizenDashboard = () => {
       {!loading && complaints.length === 0 && (
         <p>No complaints found.</p>
       )}
+
+      {/* ✅ ALWAYS VISIBLE SUBMIT BUTTON */}
+      <div className="btn-back">
+        <button
+          style={{
+            marginBottom: "20px",
+            padding: "10px 16px",
+            borderRadius: "8px",
+            background:
+              "linear-gradient(135deg, rgb(124, 58, 237), rgb(168, 85, 247), rgb(192, 132, 252))",
+            color: "#212529",
+            border: "none",
+            cursor: "pointer",
+            fontWeight: "600",
+          }}
+          onClick={() => navigate("/submit-complaint")}
+        >
+          ➕ Submit New Complaint
+        </button>
+      </div>
 
       {!loading && complaints.length > 0 && (
         <>
@@ -176,41 +195,20 @@ const CitizenDashboard = () => {
                   <p><b>Status:</b> {selected.status}</p>
                 </div>
               </div>
-
-              <br />
-
-              {/* SUBMIT NEW */}
-              <div className="btn-back">
-                <button
-                  style={{
-                    marginBottom: "20px",
-                    padding: "10px 16px",
-                    borderRadius: "8px",
-                    background:
-                      "linear-gradient(135deg, rgb(124, 58, 237), rgb(168, 85, 247), rgb(192, 132, 252))",
-                    color: "#212529",
-                    border: "none",
-                    cursor: "pointer",
-                    fontWeight: "600",
-                  }}
-                  onClick={() => navigate("/submit-complaint")}
-                >
-                  ➕ Submit New Complaint
-                </button>
-              </div>
-
-              <div>
-                <button
-                  className="btn btn-danger logout-btn"
-                  onClick={handleLogout}
-                >
-                  Logout
-                </button>
-              </div>
             </>
           )}
         </>
       )}
+
+      {/* LOGOUT */}
+      <div>
+        <button
+          className="btn btn-danger logout-btn"
+          onClick={handleLogout}
+        >
+          Logout
+        </button>
+      </div>
     </div>
   );
 };
